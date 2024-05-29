@@ -6,6 +6,25 @@ from salary import app
 def input():
     if request.method == 'POST':
         salary = request.form['salary']
+
+        if not salary :
+            flash("給与が未入力です.")
+            return render_template('input.html')
+        
+##        if not salary.isdigit():
+  ##          flash("数字を入力してください")
+    ##        return render_template('input.html')    
+        
+        for_judge = int(salary)
+
+        if for_judge >= 9999999999:
+            flash("給与には最大9,999,999,999,999まで入力可能です")
+            return render_template('input.html')
+        
+        if for_judge < 0 :
+            flash("給与にはマイナスの値は入力できません。")
+            return render_template('input.html')       
+            
         return redirect(url_for('output_salary', salary=salary))        
     return render_template('input.html')
 
