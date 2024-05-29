@@ -1,16 +1,14 @@
 <!-- 結果画面 -->
 {% extends "layout.html" %}
 {% block body %}
-<form action="/" method=get>
-<div class="form-group">
-    <label for="InputTitle">給与</label>
-    <p>{{salary}}</p>
 
-    <!-- <p>給与：{{salary}}、支給額：{{allowance}}、税額：{{tax}}</p> -->
-    
-    <!-- <p>{{"給与：{0,.0f}円の場合、支給額：{1,.0f}円、税額：{2,.0f}円です。".format(salary,allowance,tax)}}</p> -->
-    </div>
+<main>
+    <p>給与：{{salary}}円の場合、支給額：{{allowance}}円、税額：{{tax}}円です。</p>
+</main>
 
+<form action="/">
+    <div class="form-group">
     <button type="submit" class="btn btn-primary">戻る</button>
-    </form>
-    {% endblock %}
+    </div>
+</form>
+{% endblock %}
