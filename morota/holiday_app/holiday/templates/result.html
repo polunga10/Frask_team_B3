@@ -1,0 +1,15 @@
+<!-- 結果画面 -->
+{% extends "layout.html" %}
+{% block body %}
+<div>
+    <h4>処理結果</h4>
+    <p>{{ holiday.holi_date }}は{{ holiday.holi_text }}が登録されました</p>
+</div>
+
+
+<form action="/maintenance_data" method="POST">
+    <div class="btn-group">
+        <button type="submit" class="btn btn-primary">戻る</button>
+    </div>
+</form>
+{% endblock %}
