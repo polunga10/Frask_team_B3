@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+<div>
+    祝日          テキスト
+</div>
+<form action="{{ url_for('list') }}" method=get>
+{% for entry in entries %}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ entry.date }}{{ entry.text }}</h5>
+    </div>
+</div>
+        {% else %}
+        投稿がありません
+        {% endfor %}
+<button type="submit" class="btn btn-primary" name="button" value="insert_update">戻る</button>
+</form>
+{% endblock %}

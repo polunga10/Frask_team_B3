@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form action="{{ url_for('delete') }}" method=get>
+        {% if salary is not none and tax is not none %}
+        <p>
+            {{ entry.date }}は「{{ entry.text }}」削除されました。
+       </p>
+        {% else %}
+        <p>更新内容がありません。</p>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">戻る</button>
+</form>
+
+{% endblock %}
