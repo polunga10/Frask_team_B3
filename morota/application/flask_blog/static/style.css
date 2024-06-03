@@ -1,10 +1,16 @@
 .card {
     margin: 0.25rem;
+    width: 90%;
 }
 
 .blog-body {
     padding: 1.25em;
 }
+
+.container a{
+    font-weight: 600;
+}
+
 
 /* * {
     font-family: 'Mplus 1p';

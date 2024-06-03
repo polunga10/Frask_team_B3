@@ -7,11 +7,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-<div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">祝日マスタ管理</a>
-    </nav>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+            <a class="navbar-brand" href="/">祝日管理アプリ</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">新規登録・更新</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('show_list')}}">一覧出力</a>
+                    </li>    
+                </ul>
+            </div>
+    </div>
+</nav>
+
+<div class="container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-info" role="alert">
         {{ message }}
@@ -22,3 +39,34 @@
         {% block body %}{% endblock %}
     </div>
 </div>
+
+<!-- BootStrapにCSSを勝たせるために読み込み順序を後にする -->
+<!-- <link rel=stylesheet href="{{ url_for('static', filename='style.css') }}"> -->
+
+<!-- css -->
+<style>
+    .container {
+        max-width: 780px;
+    }
+
+    @media screen and (max-width: 880px){
+        .container {
+            width: 90%;
+        }
+    }
+    @media screen and (max-width: 991.98px){
+        .container {
+            padding-right: 0;
+            padding-left: 0;
+        }
+    }
+
+    .table tbody td {
+        text-align: center;
+    }
+    .table thead th {
+        text-align: center;
+    }
+
+</style>
+

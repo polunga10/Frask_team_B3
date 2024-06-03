@@ -1,0 +1,22 @@
+.container {
+    max-width: 780px;
+}
+
+@media screen and (max-width: 880px){
+    .container {
+        width: 90%;
+    }
+}
+@media screen and (max-width: 991.98px){
+    .container {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
+.table tbody td {
+    text-align: center;
+}
+.table thead th {
+    text-align: center;
+}
