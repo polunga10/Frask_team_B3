@@ -1,11 +1,11 @@
 <!-- 結果画面 -->
 {% extends "layout.html" %}
 {% block body %}
+<br>
 <div>
     <h4>処理結果</h4>
-    <p>{{ holiday.holi_date }}は{{ holiday.holi_text }}が登録されました</p>
+    <p>{{ message}}</p>
 </div>
-
 
 <form action="/maintenance_data" method="POST">
     <div class="btn-group">

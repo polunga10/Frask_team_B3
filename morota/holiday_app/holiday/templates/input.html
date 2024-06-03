@@ -1,6 +1,7 @@
 <!-- 入力画面 -->
 {% extends "layout.html" %}
 {% block body %}
+<br>
 <form action="/" method=post class=add-entry>
     <div class="form-group">
         <label for="InputTitle">祝日 日付</label>
@@ -18,7 +19,7 @@
     </div>
     <br><br>
     <div class="btn-group">
-        <button type="submit" class="btn btn-secondary">一覧出力</button>
+        <button type="submit" class="btn btn-secondary" name="button" value="list">一覧出力</button>
     </div>
 </form>
 {% endblock %}

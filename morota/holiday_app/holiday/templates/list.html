@@ -1,17 +1,32 @@
 <!-- 一覧画面 -->
 {% extends "layout.html" %}
 {% block body %}
-<ul class="list-group list-group-flush">
+<br>
+<table class="table">
+    <thead>
+        <tr class="table-primary">
+            <th scope="col">祝日</th>
+            <th scope="col">テキスト</th>
+        </tr>
+    </thead>
 
-{% for entry in entries %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ entry.title }}</h5>
-        <a href="{{url_for('show_entry', id=entry.id)}}" class="card-link">続きを読む</a>
-    </div>
-</div>
+    <tbody>
+        {% for holiday in holidays %}
+        <tr>
+            <td>{{ holiday.holi_date }}</td>
+            <td>{{ holiday.holi_text }}</td>
+        </tr>
+    </tbody>
 {% else %}
-投稿がありません
+登録がありません
 {% endfor %}
-</ul>
+</table>
+
+<form action="/list" method="POST">
+    <div class="btn-group">
+        <button type="submit" class="btn btn-primary">戻る</button>
+    </div>
+</form>
+<br>
+<br>
 {% endblock %}

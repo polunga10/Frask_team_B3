@@ -8,10 +8,18 @@ from holiday.models.mst_holiday import Holiday
 @app.route("/", methods=["GET", "POST"])
 def show_entries():
     if request.method=="POST":
-        h_date = request.form['holiday']
-        h_text = request.form['holiday_text']
-        button = request.form["button"]
-        return redirect(url_for("show_result", holiday_date=h_date, holiday_text=h_text, button=button))
+
+        #一覧出力ボタンが押されたら
+        if request.form["button"] == "list":    
+            return redirect(url_for("show_list"))
+        
+        # 新規登録・更新、削除ボタンが押されたら
+        else:
+            h_date = request.form['holiday']
+            h_text = request.form['holiday_text']
+            button = request.form["button"]
+            return redirect(url_for("show_result", holiday_date=h_date, holiday_text=h_text, button=button))
+            
     return render_template("input.html")
 
 
@@ -32,32 +40,42 @@ def show_result():
             )
             db.session.add(holiday)
             db.session.commit()
+            message = date+"（"+text+"）が登録されました"
         else:
             # データの更新
             holiday = db.session.query(Holiday).filter_by(holi_date=date).first()
             holiday.holi_text = text
             db.session.add(holiday)
             db.session.commit()
+            message = date+"は「"+text+"」に更新されました"
 
     elif button == "delete":
+        if db.session.query(Holiday).filter_by(holi_date=date).first() == None:
+            flash(date+"は、祝日マスタに登録されていません")
+            return redirect(url_for("show_entries"))
+        else:
         #データの削除
-        db.session.query(Holiday).filter_by(holi_date=date).delete()
-        db.session.commit()
+            holiday = db.session.query(Holiday).filter_by(holi_date=date).first()
+            message = date+"（"+holiday.holi_text+"）は、削除されました"
+            db.session.query(Holiday).filter_by(holi_date=date).delete()
+            db.session.commit()
+            
 
     if request.method=="POST":
         return redirect(url_for("show_entries"))
     
-    #次回は表示メッセージを作って送れるように変更する↓
-    return render_template("result.html", holiday=holiday)
-
-
-
+    return render_template("result.html", message=message)
 
 
 # 一覧画面の呼び出し
 @app.route("/list", methods=["GET", "POST"])
 def show_list():
-    return render_template("list.html")
+    holidays = Holiday.query.order_by(Holiday.holi_date.desc()).all()
+    
+
+    if request.method=="POST":
+        return redirect(url_for("show_entries"))
+    return render_template("list.html", holidays=holidays)
 
 
 
