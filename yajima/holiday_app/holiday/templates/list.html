@@ -1,0 +1,19 @@
+<!-- 一覧画面 -->
+{% extends "layout.html" %}
+{% block body %}
+<h2>祝日・テキスト</h2>
+<br>
+<ul class="list-group list-group-flush">
+    {% for holiday in holidays %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ holiday.holi_date }}</h5>
+            <p>{{ holiday.holi_text }}</p>
+
+        </div>
+    </div>
+    {% endfor %}
+<form action="{{url_for('show_result')}}" method=post>
+    <button type="submit" class="btn btn-primary">戻る</button>
+</form>
+{% endblock %}
