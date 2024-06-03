@@ -9,65 +9,82 @@ from functools import wraps
 @app.route('/', methods=['GET', 'POST'])
 def input_entry():
     if request.method == 'POST':
-        date = request.form['holiday']
-        text = request.form['holiday_text']
         button = request.form["button"]
-        return redirect(url_for("show_result", date=date,text=text, button=button))
+        if button == "check_date":
+            # 日付検索
+            date = request.form['holiday']
+            return redirect(url_for("show_result", date=date, button=button))
+        elif button == "check_text":
+            # テキスト検索
+            text = request.form['holiday_text']
+            return redirect(url_for("show_list", text=text, button=button))
+        elif button == "insert_update":
+            # 新規登録・更新時の処理
+            date = request.form['holiday']
+            text = request.form['holiday_text']
+            return redirect(url_for("show_result", date=date,text=text, button=button))
+        elif button == "delete":
+            # 削除の処理
+            date = request.form['holiday']
+            return redirect(url_for("show_result", date=date, button=button))
+        elif button == "show_list":
+            # 一覧出力
+            return redirect(url_for("show_list", button=button))
     return render_template('input.html')
 
 @app.route('/maintenance_date', methods=['GET', 'POST'])
 def show_result():
     if request.method == 'POST':
         return redirect(url_for("input_entry"))
-    
-    # 新規登録
-    # if文が反応していない？？？？<----------------やる！！
+    if request.args.get("button") == "check_date":
+        # 日付検索
+        # データが存在するかどうかを確認
+        holiday = Holiday.query.filter_by(holi_date=request.args.get("date")).first()
+        if holiday is not None:
+            flash(f"{holiday.holi_date}は「{holiday.holi_text}」です")
+            return redirect(url_for("input_entry"))
+        else:
+            flash(f"{request.args.get('date')}は、祝日マスタに登録されてません")
+            return redirect(url_for("input_entry"))
+
+    # 新規登録・更新
     if request.args.get("button")=="insert_update":
-        holiday = Holiday(
-            holi_date = request.args.get("date"),
-            holi_text = request.args.get("text")
+        holiday = Holiday.query.filter_by(holi_date=request.args.get("date")).first()
+        if holiday is not None:
+            # データが存在する→更新
+            holiday.holi_text = request.args.get("text")
+        else:
+            # データが存在しない→新規登録
+            holiday = Holiday(
+                holi_date = request.args.get("date"),
+                holi_text = request.args.get("text")
             )
         db.session.add(holiday)
         db.session.commit()
         message = f"{holiday.holi_date}は「{holiday.holi_text}」に更新されました"
+
+    elif request.args.get("button") == "delete":
+        # holiday = Holiday.query.get(request.args.get('date'))
+        holiday = Holiday.query.filter_by(holi_date=request.args.get("date")).first()
+        if holiday is not None:
+            db.session.delete(holiday) # データベースの内容を削除
+            db.session.commit()
+            message = f"{holiday.holi_date}（{holiday.holi_text}）は、削除されました"
+        else:
+            # 登録されていない場合
+            flash(f"{request.args.get('date')}は、祝日マスタに登録されてません")
+            return redirect(url_for("input_entry"))
     return render_template('result.html', message = message)
 
+# 一覧表示
 @app.route('/list', methods=['GET', 'POST'])
 def show_list():
     if request.method == 'POST':
         return redirect(url_for("input_entry"))
-    holidays = Holiday.query.order_by(Holiday.holi_date.asc()).all()
+    if request.args.get("button") == "check_text":
+        # テキスト検索
+        holidays = Holiday.query.filter(Holiday.holi_text.ilike(f'%{request.args.get("text")}%')).all()
+    else:
+        # 一覧表示
+        holidays = Holiday.query.order_by(Holiday.holi_date.asc()).all()
     return render_template('list.html', holidays=holidays)
-
-
-# # デコレータ: あるメソッドを実行する前に特定の処理を実行させる
-# # ログインしているかしていないかの判定
-# def login_required(view):
-#     @wraps(view)
-#     def inner(*args, **kwargs):
-#         if not session.get('logged_in'): # ログインしていないとき
-#             return redirect(url_for('login'))
-#         return view(*args, **kwargs)
-#     return inner
-
-# # methodsは、このURLに対するHTTPメソッドを制限する、デフォルトは'GET'のみ
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     error = None
-#     if request.method == 'POST': # POST（送信）のとき
-#         if request.form['username'] != app.config['USERNAME']:
-#             flash('ユーザ名が異なります')
-#         elif request.form['password'] != app.config['PASSWORD']:
-#             flash('パスワードが異なります')
-#         else: # ログインが成功したら
-#             session['logged_in'] = True
-#             flash('ログインしました')
-#             return redirect('/')
-#     return render_template('login.html') # GET（URLにアクセス）のとき？
-
-
-# @app.route('/logout')
-# def logout():
-#     session.pop('logged_in', None) # セッション情報を削除
-#     flash('ログアウトしました')
-#     return redirect('/') # ホーム画面に戻る

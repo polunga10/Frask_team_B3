@@ -17,6 +17,13 @@
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
+    <!-- get_flashed_messages(): サーバから渡されたすべてのメッセージを取得 -->
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-info" role="alert">
+        {{message}}
+        </div>
+    {% endfor %}
+
     <div class="blog-body">
         {% block body %}{% endblock %}
     </div>

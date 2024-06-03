@@ -4,6 +4,9 @@
 <h2>処理結果</h2>
 <br>
 <p>{{ message }}</p>
-
+<br>
+<form action="{{url_for('show_result')}}" method=post>
+    <button type="submit" class="btn btn-primary">戻る</button>
+</form>
 
 {% endblock %}
